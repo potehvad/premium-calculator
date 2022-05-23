@@ -1,0 +1,80 @@
+openapi: 3.0.0
+info:
+  title: Policy premium calculation service
+  description: This specification describes API for policy premium calculation service
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/premium
+paths:
+  /calculator:
+    post:
+      summary: Calculates premium amount for policy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                policyNumber:
+                  type: string
+                policyStatus:
+                  type: string
+                  items:
+                    enum:
+                      - APPROVED
+                      - REGISTRED
+                objects:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      subObjects:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            sumInsured:
+                              type: number
+                            riskType:
+                              type: string
+                              items:
+                                enum:
+                                  - FIRE
+                                  - THEFT
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  risks:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        riskType:
+                          type: string
+                          items:
+                            enum:
+                              - FIRE
+                              - THEFT
+                        sum:
+                          type: number
+                  premium:
+                    type: number
+        '4XX':
+          description: Unsuccessful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
